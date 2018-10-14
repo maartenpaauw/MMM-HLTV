@@ -1,0 +1,10 @@
+{
+  "name": "MMM-HLTV",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "maartenpaauw <maartenpaauw@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "hltv": "^2.9.0"
+  }
+}
