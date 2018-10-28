@@ -77,7 +77,7 @@ Module.register("MMM-HLTV", {
      * @return {DomObject | Promise} The dom or a promise with the dom to display.
      */
     getDom() {
-        const table = this.getTable();
+        const table = document.createElement('table');
 
         this.matches.forEach(match => {
             table.append(this.getMatch(match));
@@ -109,42 +109,12 @@ Module.register("MMM-HLTV", {
     },
 
     /**
-     * Get table.
-     * 
-     * @return {string} table
-     */
-    getTable() {
-        const table = document.createElement('table');
-        return table.cloneNode();
-    },
-
-    /**
-     * Generate a table row.
-     * 
-     * @return {string} row
-     */
-    getTableRow() {
-        const tr = document.createElement('tr');
-        return tr.cloneNode();
-    },
-
-    /**
-     * Generate a table cell.
-     * 
-     * @return {string} cell
-     */
-    getTableCell() {
-        const td = document.createElement('td');
-        return td.cloneNode();
-    },
-
-    /**
      * Generate a basic info cell.
      * 
      * @return {string} info cell
      */
     getInfoCell() {
-        const cell = this.getTableCell();
+        const cell = document.createElement('td');
 
         cell.setAttribute('colspan', 2);
         cell.classList.add('xsmall', 'light', 'dimmed');
@@ -160,13 +130,13 @@ Module.register("MMM-HLTV", {
      * @return {string} time row
      */
     getTimeRow(date, live) {
-        const row = this.getTableRow();
+        const row = document.createElement('tr');
         const cell = this.getInfoCell();
         const time = moment(date).format('HH:mm');
 
         live ? cell.append(this.getLive()) : cell.append(time);
 
-        row.append(this.getTableCell());
+        row.append(document.createElement('td'));
         row.append(cell);
 
         return row;
@@ -194,10 +164,10 @@ Module.register("MMM-HLTV", {
      * @return {string} team row
      */
     getTeamRow(logo, name, score, won) {
-        const row = this.getTableRow();
-        const cellLogo = this.getTableCell();
-        const cellName = this.getTableCell();
-        const cellScore = this.getTableCell();
+        const row = document.createElement('tr');
+        const cellLogo = document.createElement('td');
+        const cellName = document.createElement('td');
+        const cellScore = document.createElement('td');
 
         cellLogo.innerHTML = logo;
         cellLogo.classList.add('small');
@@ -222,11 +192,11 @@ Module.register("MMM-HLTV", {
      * @return {string} event row
      */
     getEventRow(name) {
-        const row = this.getTableRow();
+        const row = document.createElement('tr');
         const cell = this.getInfoCell();
 
         cell.append(name);
-        row.append(this.getTableCell(), cell);
+        row.append(document.createElement('td'), cell);
 
         return row;
     },
@@ -238,7 +208,7 @@ Module.register("MMM-HLTV", {
      * @return {string} match inside a table
      */
     getMatch(match) {
-        const table = this.getTable();
+        const table = document.createElement('table');
         table.classList.add('match');
 
         const name1 = match.team1 ? match.team1.name : 'TBA';
