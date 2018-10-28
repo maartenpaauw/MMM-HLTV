@@ -3,29 +3,27 @@ Module.register("MMM-HLTV", {
     // All matches.
     matches: [],
 
-    /**
-     * Default configurations.
-     */
+    // Module config defaults.
     defaults: {
         'amount': 5,
         'updateInterval': 60 * 1000,
     },
 
     /**
-     * Get the stylesheets.
+     * Is called when the module is started.
      * 
-     * @return {Array<string>} list of files to load
+     * @return {void}
      */
-    getStyles() {
-        return [
-            'MMM-HLTV.css',
-        ]
+    start() {
+        this.sendSocketNotification('MODULE_CONFIG', this.config);
+        this.sendSocketNotification('MATCHES_FETCH');
+        this.scheduleFetch();
     },
 
     /**
-     * Get the scripts.
+     * Returns a list of scripts the module requires to be loaded.
      * 
-     * @return {Array<string>} list of files to load
+     * @return {Array<string>} An array with filenames.
      */
     getScripts() {
         return [
@@ -34,14 +32,26 @@ Module.register("MMM-HLTV", {
     },
 
     /**
-     * The module is started.
+     * Returns a list of stylesheets the module requires to be loaded.
      * 
-     * @return {void}
+     * @return {Array<string>} An array with filenames.
      */
-    start() {
-        this.sendSocketNotification('MODULE_CONFIG', this.config);
-        this.sendSocketNotification('MATCHES_FETCH');
-        this.scheduleFetch();
+    getStyles() {
+        return [
+            'MMM-HLTV.css',
+        ]
+    },
+
+    /**
+     * Returns a map of translation files the module requires to be loaded.
+     * 
+     * @return {Map<string, string} A map with langKeys and filenames.
+     */
+    getTranslations() {
+        return {
+            en: 'translations/en.json',
+            nl: 'translations/nl.json',
+        };
     },
 
     /**
@@ -167,7 +177,7 @@ Module.register("MMM-HLTV", {
      */
     getLive() {
         const live = document.createElement('span');
-        live.append('live');
+        live.append(this.translate('LIVE'));
         live.classList.add('bold', 'live');
         return live;
     },
