@@ -3,6 +3,9 @@ const { HLTV } = require('hltv');
 
 module.exports = NodeHelper.create({
 
+    // Module config.
+    config: [],
+
     /**
      * Socket notification is received from the module.
      * 
@@ -13,8 +16,10 @@ module.exports = NodeHelper.create({
     socketNotificationReceived(notification, payload) {
 
         switch(notification) {
-            case 'MODULE_START':
-            case 'MATCHES_FETCH': // TODO: update matches
+            case 'MODULE_CONFIG':
+                this.config = payload;
+                break;
+            case 'MATCHES_FETCH':
                 this.getMatchesAndNotify();
                 break;
         }
@@ -28,7 +33,7 @@ module.exports = NodeHelper.create({
      */
     getMatchesAndNotify() {
         HLTV.getMatches().then((res) => {
-            this.sendSocketNotification('MATCHES_RECEIVED', res);
+            this.sendSocketNotification('MATCHES_RECEIVED', res.splice(0, this.config.amount));
         });
     }
 });

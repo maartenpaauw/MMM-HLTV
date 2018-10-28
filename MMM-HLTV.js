@@ -8,6 +8,7 @@ Module.register("MMM-HLTV", {
      */
     defaults: {
         'amount': 5,
+        'updateInterval': 60 * 1000,
     },
 
     /**
@@ -33,10 +34,25 @@ Module.register("MMM-HLTV", {
     },
 
     /**
+     * The module is started.
      * 
+     * @return {void}
      */
     start() {
-        this.sendSocketNotification('MODULE_START');
+        this.sendSocketNotification('MODULE_CONFIG', this.config);
+        this.sendSocketNotification('MATCHES_FETCH');
+        this.scheduleFetch();
+    },
+
+    /**
+     * Schedule new matches fetch.
+     * 
+     * @return {void}
+     */
+    scheduleFetch() {
+        setInterval(() => {
+            this.sendSocketNotification('MATCHES_FETCH');
+        }, this.config.updateInterval);
     },
 
     /**
@@ -72,9 +88,8 @@ Module.register("MMM-HLTV", {
      */
     getDom() {
         const table = this.getTable();
-        const matches = this.matches.splice(0, this.config.amount);
 
-        matches.forEach(match => {
+        this.matches.forEach(match => {
             table.append(this.getMatch(match));
         });
 
@@ -130,7 +145,6 @@ Module.register("MMM-HLTV", {
      * 
      * @param  {string}  time match time.
      * @param  {boolean} live match is live.
-     * 
      * @return {string} time row
      */
     getTimeRow(date, live) {
@@ -165,7 +179,6 @@ Module.register("MMM-HLTV", {
      * @param  {string}  name  team name
      * @param  {number}  score team score
      * @param  {boolean} won   team won
-     * 
      * @return {string} team row
      */
     getTeamRow(logo, name, score, won) {
@@ -194,7 +207,6 @@ Module.register("MMM-HLTV", {
      * Get event row.
      * 
      * @param  {string} name event name
-     * 
      * @return {string} event row
      */
     getEventRow(name) {
@@ -211,7 +223,6 @@ Module.register("MMM-HLTV", {
      * Get a match.
      * 
      * @param  {object} match match object
-     * 
      * @return {string} match inside a table
      */
     getMatch(match) {
