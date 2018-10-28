@@ -55,21 +55,10 @@ Module.register("MMM-HLTV", {
     },
 
     /**
-     * Schedule new matches fetch.
+     * This method is called when a socket notification arrives.
      * 
-     * @return {void}
-     */
-    scheduleFetch() {
-        setInterval(() => {
-            this.sendSocketNotification('MATCHES_FETCH');
-        }, this.config.updateInterval);
-    },
-
-    /**
-     * Socket notification is received
-     * 
-     * @param  {string} notification the notification key
-     * @param  {mixed}  payload      the payload
+     * @param  {string} notification The identifier of the notification.
+     * @param  {mixed}  payload      The payload of the notification.
      * @return {void}
      */
     socketNotificationReceived(notification, payload) {
@@ -81,20 +70,11 @@ Module.register("MMM-HLTV", {
     },
 
     /**
-     * Set the matches.
+     * This method generates the dom which needs to be displayed. This method is called by the Magic Mirror core.
+     * This method can to be subclassed if the module wants to display info on the mirror.
+     * Alternatively, the getTemplete method could be subclassed.
      * 
-     * @param  {Array} matches All current matches from HLTV
-     * @return {void}
-     */
-    setMatches(matches) {
-        this.matches = matches;
-        this.updateDom();
-    },
-
-    /**
-     * Get the dom to render.
-     * 
-     * @return {string} the dom elements as string.
+     * @return {DomObject | Promise} The dom or a promise with the dom to display.
      */
     getDom() {
         const table = this.getTable();
@@ -104,6 +84,28 @@ Module.register("MMM-HLTV", {
         });
 
         return table;
+    },
+
+    /**
+     * Schedule new matches fetch.
+     * 
+     * @return {void}
+     */
+    scheduleFetch() {
+        setInterval(() => {
+            this.sendSocketNotification('MATCHES_FETCH');
+        }, this.config.updateInterval);
+    },
+
+    /**
+     * Set the matches.
+     * 
+     * @param  {Array} matches All current matches from HLTV
+     * @return {void}
+     */
+    setMatches(matches) {
+        this.matches = matches;
+        this.updateDom();
     },
 
     /**
