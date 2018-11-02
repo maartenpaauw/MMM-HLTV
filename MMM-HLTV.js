@@ -116,7 +116,6 @@ Module.register("MMM-HLTV", {
     getInfoCell() {
         const cell = document.createElement('td');
 
-        cell.setAttribute('colspan', 2);
         cell.classList.add('xsmall', 'light', 'dimmed');
 
         return cell;
@@ -132,11 +131,8 @@ Module.register("MMM-HLTV", {
     getTimeRow(date, live) {
         const row = document.createElement('tr');
         const cell = this.getInfoCell();
-        const time = moment(date).format('HH:mm');
 
-        live ? cell.append(this.getLive()) : cell.append(time);
-
-        row.append(document.createElement('td'));
+        cell.append(live ? this.getLive() : moment(date).format('HH:mm'));
         row.append(cell);
 
         return row;
@@ -149,38 +145,26 @@ Module.register("MMM-HLTV", {
      */
     getLive() {
         const live = document.createElement('span');
+
         live.append(this.translate('LIVE'));
         live.classList.add('bold', 'live');
+
         return live;
     },
 
     /**
      * Generate team row.
      * 
-     * @param  {string}  logo  team logo url
      * @param  {string}  name  team name
-     * @param  {number}  score team score
-     * @param  {boolean} won   team won
      * @return {string} team row
      */
-    getTeamRow(logo, name, score, won) {
+    getTeamRow(name) {
         const row = document.createElement('tr');
-        const cellLogo = document.createElement('td');
         const cellName = document.createElement('td');
-        const cellScore = document.createElement('td');
-
-        cellLogo.innerHTML = logo;
-        cellLogo.classList.add('small');
 
         cellName.append(name);
-        cellScore.append(score);
-
-        const classes = won ? ['small', 'bold', 'bright'] : ['small', 'light'];
-
-        cellName.classList.add(...classes);
-        cellScore.classList.add(...classes, 'align-right');
-
-        row.append(cellLogo, cellName, cellScore);
+        cellName.classList.add('small', 'light');
+        row.append(cellName);
 
         return row;
     },
@@ -196,7 +180,7 @@ Module.register("MMM-HLTV", {
         const cell = this.getInfoCell();
 
         cell.append(name);
-        row.append(document.createElement('td'), cell);
+        row.append(cell);
 
         return row;
     },
@@ -209,28 +193,24 @@ Module.register("MMM-HLTV", {
      */
     getMatch(match) {
         const table = document.createElement('table');
+        
         table.classList.add('match');
-
-        const name1 = match.team1 ? match.team1.name : 'TBA';
-        const name2 = match.team2 ? match.team2.name : 'TBA';
-        const event = match.event ? match.event.name : 'TBA';
-
         table.append(this.getTimeRow(match.date, match.live));
-        table.append(this.getTeamRow(null, name1, 1, this.isWinner()));
-        table.append(this.getTeamRow(null, name2, 1, this.isWinner()));
-        table.append(this.getEventRow(event));
+        table.append(this.getTeamRow(this.getValue(match.team1, 'name')));
+        table.append(this.getTeamRow(this.getValue(match.team2, 'name')));
+        table.append(this.getEventRow(this.getValue(match.event, 'name')));
 
         return table;
     },
 
     /**
-     * Check if the team won.
-     * Currently only live and upcoming match are supported.
-     * So there is no winner yet.
+     * Get value of a given key or return TBA translated.
      * 
-     * @return {boolean} is winner
+     * @param  {object} data data
+     * @param  {string} name name
+     * @return {string} value
      */
-    isWinner() {
-        return false;
+    getValue(data, name) {
+        return data ? data[name] : this.translate('TBA');
     }
 });
