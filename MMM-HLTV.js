@@ -7,6 +7,7 @@ Module.register("MMM-HLTV", {
     defaults: {
         'updateInterval': 60 * 1000,
         'amount': 5,
+        'stars': 0,
     },
 
     /**

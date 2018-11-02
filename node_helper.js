@@ -36,6 +36,37 @@ module.exports = NodeHelper.create({
      */
     async getMatchesAndNotify() {
         this.matches = await HLTV.getMatches();
-        this.sendSocketNotification('MATCHES_RECEIVED', this.matches.slice(0, this.config.amount));
+        this.applyfilters();
+        this.sendSocketNotification('MATCHES_RECEIVED', this.matches);
     },
+
+    /**
+     * Apply all config filters.
+     * 
+     * @return {void}
+     */
+    applyfilters () {
+        this.filterAmount();
+        this.filterStars();
+    },
+
+    /**
+     * Show the first X matches based on amount.
+     * 
+     * @return {void}
+     */
+    filterAmount () {
+        this.matches = this.matches.slice(0, this.config.amount);
+    },
+
+    /**
+     * Only allow matches with enough stars.
+     * 
+     * @return {void}
+     */
+    filterStars () {
+        this.matches = this.matches.filter(match => {
+            return match.stars >= this.config.stars;
+        });
+    }
 });
