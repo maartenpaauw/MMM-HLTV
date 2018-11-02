@@ -6,6 +6,9 @@ module.exports = NodeHelper.create({
     // Module config.
     config: [],
 
+    // Matches
+    matches: [],
+
     /**
      * Socket notification is received from the module.
      * 
@@ -16,10 +19,10 @@ module.exports = NodeHelper.create({
     socketNotificationReceived(notification, payload) {
 
         switch(notification) {
-            case 'MODULE_CONFIG':
+            case 'SET_CONFIG':
                 this.config = payload;
                 break;
-            case 'MATCHES_FETCH':
+            case 'FETCH_MATCHES':
                 this.getMatchesAndNotify();
                 break;
         }
@@ -31,9 +34,8 @@ module.exports = NodeHelper.create({
      * 
      * @return {void}
      */
-    getMatchesAndNotify() {
-        HLTV.getMatches().then((res) => {
-            this.sendSocketNotification('MATCHES_RECEIVED', res.splice(0, this.config.amount));
-        });
-    }
+    async getMatchesAndNotify() {
+        this.matches = await HLTV.getMatches();
+        this.sendSocketNotification('MATCHES_RECEIVED', this.matches.slice(0, this.config.amount));
+    },
 });

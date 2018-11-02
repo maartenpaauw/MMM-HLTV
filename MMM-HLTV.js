@@ -5,8 +5,8 @@ Module.register("MMM-HLTV", {
 
     // Module config defaults.
     defaults: {
-        'amount': 5,
         'updateInterval': 60 * 1000,
+        'amount': 5,
     },
 
     /**
@@ -15,8 +15,8 @@ Module.register("MMM-HLTV", {
      * @return {void}
      */
     start() {
-        this.sendSocketNotification('MODULE_CONFIG', this.config);
-        this.sendSocketNotification('MATCHES_FETCH');
+        this.sendSocketNotification('SET_CONFIG', this.config);
+        this.sendSocketNotification('FETCH_MATCHES');
         this.scheduleFetch();
     },
 
