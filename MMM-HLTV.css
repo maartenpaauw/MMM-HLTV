@@ -1,9 +1,18 @@
-.live {
+.live__text {
     text-transform: uppercase;
-    margin-right: 5px;
+}
+
+.live__icon {
     color: red;
+    font-size: 50%;
+    margin-right: 5px;
+    vertical-align: text-top;
 }
 
 .match {
     margin-bottom: 20px;
+}
+
+.stars {
+    text-align: right;
 }

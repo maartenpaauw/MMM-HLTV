@@ -129,14 +129,26 @@ Module.register("MMM-HLTV", {
      * @param  {boolean} live match is live.
      * @return {string} time row
      */
-    getTimeRow(date, live) {
-        const row = document.createElement('tr');
+    getTimeCell(date, live) {
         const cell = this.getInfoCell();
 
         cell.append(live ? this.getLive() : moment(date).format('HH:mm'));
-        row.append(cell);
 
-        return row;
+        return cell;
+    },
+
+    /**
+     * Get star element.
+     * 
+     * @param {int} stars amount of stars.
+     */
+    getStarCell(stars) {
+        const cell = this.getInfoCell();
+
+        cell.classList.add('stars');
+        cell.append('★'.repeat(stars));
+        
+        return cell;
     },
 
     /**
@@ -145,12 +157,20 @@ Module.register("MMM-HLTV", {
      * @return {string} live icon
      */
     getLive() {
+        const wrapper = document.createElement('span');
+        const icon = document.createElement('span');
         const live = document.createElement('span');
 
-        live.append(this.translate('LIVE'));
-        live.classList.add('bold', 'live');
+        icon.classList.add('live__icon')
+        icon.append('⬤');
 
-        return live;
+        live.classList.add('live__text');
+        live.append(this.translate('LIVE'));
+        
+        wrapper.classList.add('live', 'bold', 'bright');
+        wrapper.append(icon, live);
+
+        return wrapper;
     },
 
     /**
@@ -194,9 +214,15 @@ Module.register("MMM-HLTV", {
      */
     getMatch(match) {
         const table = document.createElement('table');
-        
+        const information = document.createElement('tr');
+
+        information.append(
+            this.getTimeCell(match.date, match.live),
+            this.getStarCell(match.stars),
+        );
+
         table.classList.add('match');
-        table.append(this.getTimeRow(match.date, match.live));
+        table.append(information);
         table.append(this.getTeamRow(this.getValue(match.team1, 'name')));
         table.append(this.getTeamRow(this.getValue(match.team2, 'name')));
         table.append(this.getEventRow(this.getValue(match.event, 'name')));
