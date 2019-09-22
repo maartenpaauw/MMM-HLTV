@@ -46,8 +46,8 @@ module.exports = NodeHelper.create({
      * @return {void}
      */
     applyfilters () {
-        this.filterAmount();
         this.filterStars();
+        this.filterAmount();
     },
 
     /**
