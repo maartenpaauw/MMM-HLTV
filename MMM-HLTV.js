@@ -29,7 +29,7 @@ Module.register("MMM-HLTV", {
     getScripts() {
         return [
             'moment.js',
-        ]
+        ];
     },
 
     /**
@@ -40,7 +40,7 @@ Module.register("MMM-HLTV", {
     getStyles() {
         return [
             'MMM-HLTV.css',
-        ]
+        ];
     },
 
     /**
@@ -79,6 +79,10 @@ Module.register("MMM-HLTV", {
      */
     getDom() {
         const table = document.createElement('table');
+
+        if (this.matches.length === 0) {
+            table.append(this.getNoMatchesFoundElement());
+        }
 
         this.matches.forEach(match => {
             table.append(this.getMatch(match));
@@ -120,6 +124,23 @@ Module.register("MMM-HLTV", {
         cell.classList.add('xsmall', 'light', 'dimmed');
 
         return cell;
+    },
+
+    /**
+     * Get the now matches found element.
+     * 
+     * @return {string} table row
+     */
+    getNoMatchesFoundElement() {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+
+        cell.classList.add('xsmall', 'light', 'dimmed');
+        cell.append(this.translate('NO_MATCHES_FOUND'));
+
+        row.append(cell);
+
+        return row;
     },
 
     /**

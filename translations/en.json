@@ -1,4 +1,5 @@
 {
-    "LIVE": "live",
-    "TBA": "TBA"
+    "LIVE": "Live",
+    "TBA": "TBA",
+    "NO_MATCHES_FOUND": "No matches found."
 }
