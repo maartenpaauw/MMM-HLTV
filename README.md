@@ -41,6 +41,7 @@ var config = {
 | `updateInterval` | *Optional* The update interval in milliseconds <br><br>**Type:** `int` <br>**Default:** 60000 (1 minute) |
 | `amount`         | *Optional* The amount of matches to show <br><br>**Type:** `int` <br>**Default:** 5                      |
 | `stars`          | *Optional* The minimum number of stars a match must have <br><br>**Type:** `int` <br>**Default:** 0      |
+| `preferWhite`    | *Optional* Whether the module may use colors <br><br>**Type:** `bool` <br>**Default:** false             |
 
 ## Built With
 

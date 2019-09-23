@@ -8,6 +8,7 @@ Module.register("MMM-HLTV", {
         'updateInterval': 60 * 1000,
         'amount': 5,
         'stars': 0,
+        'preferWhite': false,
     },
 
     /**
@@ -181,6 +182,10 @@ Module.register("MMM-HLTV", {
         const wrapper = document.createElement('span');
         const icon = document.createElement('span');
         const live = document.createElement('span');
+
+        if (! this.config.preferWhite) {
+            icon.classList.add('live__icon--colored');
+        }
 
         icon.classList.add('live__icon')
         icon.append('⬤');
