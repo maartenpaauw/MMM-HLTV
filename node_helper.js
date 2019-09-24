@@ -19,10 +19,10 @@ module.exports = NodeHelper.create({
     socketNotificationReceived(notification, payload) {
 
         switch(notification) {
-            case 'SET_CONFIG':
+            case 'CONFIG_SET':
                 this.config = payload;
                 break;
-            case 'FETCH_MATCHES':
+            case 'MATCHES_FETCH':
                 this.getMatchesAndNotify();
                 break;
         }

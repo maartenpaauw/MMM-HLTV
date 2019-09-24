@@ -20,8 +20,8 @@ Module.register("MMM-HLTV", {
      * @return {void}
      */
     start() {
-        this.sendSocketNotification('SET_CONFIG', this.config);
-        this.sendSocketNotification('FETCH_MATCHES');
+        this.sendSocketNotification('CONFIG_SET', this.config);
+        this.sendSocketNotification('MATCHES_FETCH');
         this.scheduleFetch();
     },
 
