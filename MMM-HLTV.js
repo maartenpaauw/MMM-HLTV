@@ -11,6 +11,9 @@ Module.register("MMM-HLTV", {
         'preferWhite': false,
     },
 
+    // Interval
+    interval: null,
+
     /**
      * Is called when the module is started.
      * 
@@ -75,6 +78,20 @@ Module.register("MMM-HLTV", {
     },
 
     /**
+     * This method is called when a module is hidden.
+     */
+    suspend() {
+        clearInterval(this.interval);
+    },
+
+    /**
+     * This method is called when a module is shown.
+     */
+    resume() {
+        this.scheduleFetch();
+    },
+
+    /**
      * This method is called when a socket notification arrives.
      * 
      * @param  {string} notification The identifier of the notification.
@@ -95,7 +112,7 @@ Module.register("MMM-HLTV", {
      * @return {void}
      */
     scheduleFetch() {
-        setInterval(() => {
+        this.interval = setInterval(() => {
             this.sendSocketNotification('MATCHES_FETCH');
         }, this.config.updateInterval);
     },
