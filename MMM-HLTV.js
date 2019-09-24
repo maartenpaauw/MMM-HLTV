@@ -57,6 +57,24 @@ Module.register("MMM-HLTV", {
     },
 
     /**
+     * Get the Nunjucks template.
+     */
+    getTemplate() {
+        return "MMM-HLTV.njk";
+    },
+
+    /**
+     * Get the Nunjucks template data.
+     */
+    getTemplateData() {
+        return {
+            config: this.config,
+            matches: this.matches,
+            moment,
+        };
+    },
+
+    /**
      * This method is called when a socket notification arrives.
      * 
      * @param  {string} notification The identifier of the notification.
@@ -68,28 +86,7 @@ Module.register("MMM-HLTV", {
             case 'MATCHES_RECEIVED':
                 this.setMatches(payload);
                 break;
-        }
-    },
-
-    /**
-     * This method generates the dom which needs to be displayed. This method is called by the Magic Mirror core.
-     * This method can to be subclassed if the module wants to display info on the mirror.
-     * Alternatively, the getTemplete method could be subclassed.
-     * 
-     * @return {DomObject | Promise} The dom or a promise with the dom to display.
-     */
-    getDom() {
-        const table = document.createElement('table');
-
-        if (this.matches.length === 0) {
-            table.append(this.getNoMatchesFoundElement());
-        }
-
-        this.matches.forEach(match => {
-            table.append(this.getMatch(match));
-        });
-
-        return table;
+        };
     },
 
     /**
@@ -113,157 +110,4 @@ Module.register("MMM-HLTV", {
         this.matches = matches;
         this.updateDom();
     },
-
-    /**
-     * Generate a basic info cell.
-     * 
-     * @return {string} info cell
-     */
-    getInfoCell() {
-        const cell = document.createElement('td');
-
-        cell.classList.add('xsmall', 'light', 'dimmed');
-
-        return cell;
-    },
-
-    /**
-     * Get the now matches found element.
-     * 
-     * @return {string} table row
-     */
-    getNoMatchesFoundElement() {
-        const row = document.createElement('tr');
-        const cell = document.createElement('td');
-
-        cell.classList.add('xsmall', 'light', 'dimmed');
-        cell.append(this.translate('NO_MATCHES_FOUND'));
-
-        row.append(cell);
-
-        return row;
-    },
-
-    /**
-     * Get the match time row.
-     * 
-     * @param  {string}  time match time.
-     * @param  {boolean} live match is live.
-     * @return {string} time row
-     */
-    getTimeCell(date, live) {
-        const cell = this.getInfoCell();
-
-        cell.append(live ? this.getLive() : moment(date).format('HH:mm'));
-
-        return cell;
-    },
-
-    /**
-     * Get star element.
-     * 
-     * @param {int} stars amount of stars.
-     */
-    getStarCell(stars) {
-        const cell = this.getInfoCell();
-
-        cell.classList.add('stars');
-        cell.append('★'.repeat(stars));
-        
-        return cell;
-    },
-
-    /**
-     * Get live icon.
-     * 
-     * @return {string} live icon
-     */
-    getLive() {
-        const wrapper = document.createElement('span');
-        const icon = document.createElement('span');
-        const live = document.createElement('span');
-
-        if (! this.config.preferWhite) {
-            icon.classList.add('live__icon--colored');
-        }
-
-        icon.classList.add('live__icon')
-        icon.append('⬤');
-
-        live.classList.add('live__text');
-        live.append(this.translate('LIVE'));
-        
-        wrapper.classList.add('live', 'bold', 'bright');
-        wrapper.append(icon, live);
-
-        return wrapper;
-    },
-
-    /**
-     * Generate team row.
-     * 
-     * @param  {string}  name  team name
-     * @return {string} team row
-     */
-    getTeamRow(name) {
-        const row = document.createElement('tr');
-        const cellName = document.createElement('td');
-
-        cellName.append(name);
-        cellName.classList.add('small', 'light');
-        row.append(cellName);
-
-        return row;
-    },
-
-    /**
-     * Get event row.
-     * 
-     * @param  {string} name event name
-     * @return {string} event row
-     */
-    getEventRow(name) {
-        const row = document.createElement('tr');
-        const cell = this.getInfoCell();
-
-        cell.append(name);
-        row.append(cell);
-
-        return row;
-    },
-
-    /**
-     * Get a match.
-     * 
-     * @param  {object} match match object
-     * @return {string} match inside a table
-     */
-    getMatch(match) {
-        const table = document.createElement('table');
-        const information = document.createElement('tr');
-
-        information.append(
-            this.getTimeCell(match.date, match.live),
-            this.getStarCell(match.stars),
-        );
-
-        table.classList.add('match');
-        table.append(information);
-        table.append(this.getTeamRow(this.getValue(match.team1, 'name')));
-        table.append(this.getTeamRow(this.getValue(match.team2, 'name')));
-        table.append(this.getEventRow(this.getValue(match.event, 'name')));
-
-        return table;
-    },
-
-    /**
-     * Get value of a given key or return TBA translated.
-     * 
-     * @param  {object} data data
-     * @param  {string} name name
-     * @return {string} value
-     */
-    getValue(data, name) {
-        return data ? data[name] : this.translate('TBA');
-    }
 });

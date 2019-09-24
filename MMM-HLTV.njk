@@ -1,0 +1,38 @@
+<table class="xsmall light dimmed">
+    {% if matches.length === 0 %}
+        <tr>
+            <td>{{ 'NO_MATCHES_FOUND' | translate }}</td>
+        </tr>
+    {% else %}
+        <tr>
+            <td>
+                {% for match in matches %}
+                    <table class="match">
+                        <tr>
+                            {% if match.live %}
+                                <td>
+                                    <div class="live bold bright">
+                                        <span class="live__icon {{ 'live__icon--colored' if not config.preferWhite }}">⬤</span>
+                                        <span>{{ 'LIVE' | translate | upper }}</span>
+                                    </div>
+                                </td>
+                            {% else %}
+                                <td class="normal">{{ moment(match.date).format('HH:mm') }}</td>
+                            {% endif %}
+                            <td class="stars">{{ '★'.repeat(match.stars) }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="small bright">{{ match.team1.name }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="small bright">{{ match.team2.name }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">{{ match.event.name }}</td>
+                        </tr>
+                    </table>
+                {% endfor %}
+            </td>
+        </tr>
+    {% endif %}
+</table>
