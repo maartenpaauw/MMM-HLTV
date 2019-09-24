@@ -1,4 +1,4 @@
-Module.register("MMM-HLTV", {
+Module.register('MMM-HLTV', {
 
     // All matches.
     matches: [],
@@ -63,7 +63,7 @@ Module.register("MMM-HLTV", {
      * Get the Nunjucks template.
      */
     getTemplate() {
-        return "MMM-HLTV.njk";
+        return 'MMM-HLTV.njk';
     },
 
     /**

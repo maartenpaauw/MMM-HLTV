@@ -1,4 +1,4 @@
-const NodeHelper = require("node_helper");
+const NodeHelper = require('node_helper');
 const { HLTV } = require('hltv');
 
 module.exports = NodeHelper.create({
