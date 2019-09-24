@@ -21,12 +21,11 @@
                             {% endif %}
                             <td class="stars">{{ '★'.repeat(match.stars) }}</td>
                         </tr>
-                        <tr>
-                            <td colspan="2" class="small bright">{{ match.team1.name }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="small bright">{{ match.team2.name }}</td>
-                        </tr>
+                        {% for team in [match.team1, match.team2] %}
+                            <tr>
+                                <td colspan="2" class="small bright">{{ team.name }}</td>
+                            </tr>
+                        {% endfor %}
                         <tr>
                             <td colspan="2">{{ match.event.name }}</td>
                         </tr>
