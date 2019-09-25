@@ -3,6 +3,9 @@ Module.register('MMM-HLTV', {
     // All matches.
     matches: [],
 
+    // Scorebots
+    scorebots: {},
+
     // Module config defaults.
     defaults: {
         'updateInterval': 60 * 1000,
@@ -75,7 +78,13 @@ Module.register('MMM-HLTV', {
         return {
             config: this.config,
             matches: this.matches,
+            scorebots: this.scorebots,
             moment,
+
+            is: (side, team, scoreboard) => {
+                const key = side === 'T' ? 'tTeamId' : 'ctTeamId';
+                return typeof scoreboard !== 'undefined' && team.id === scoreboard[key];
+            }
         };
     },
 
@@ -105,6 +114,12 @@ Module.register('MMM-HLTV', {
             case 'MATCHES_RECEIVED':
                 this.setMatches(payload);
                 break;
+            case 'MATCH_ENDED':
+                this.removeFromScoreboards(payload);
+                break;
+            case 'MATCH_UPDATE':
+                this.updateScoreboard(payload);
+                break;
         };
     },
 
@@ -127,6 +142,24 @@ Module.register('MMM-HLTV', {
      */
     setMatches(matches) {
         this.matches = matches;
-        this.updateDom();
+        this.updateDom(500);
+    },
+
+    /**
+     * 
+     * @param {object} update scoreboard update.
+     */
+     updateScoreboard(update) {
+        const exists = update.id in this.scorebots;
+        this.scorebots[update.id] = update.scoreboard;
+        if(! exists) this.updateDom(500);
+    },
+
+    /**
+     * 
+     * @param {int} id match id to remove from object.
+     */
+    removeFromScoreboards(id) {
+        delete this.scorebots[id];
     },
 });

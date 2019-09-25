@@ -24,3 +24,7 @@
     width: 30px;
     margin-top: 5px;
 }
+
+.score {
+    text-align: right;
+}
