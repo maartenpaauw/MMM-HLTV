@@ -9,6 +9,9 @@
                 {% for match in matches %}
                     <table class="match">
                         <tr>
+                            {% if config.showLogos %}
+                                <td>&nbsp;</td>
+                            {% endif %}
                             {% if match.live %}
                                 <td>
                                     <div class="live bold bright">
@@ -23,10 +26,18 @@
                         </tr>
                         {% for team in [match.team1, match.team2] %}
                             <tr>
+                                {% if config.showLogos %}
+                                    <td class="logo">
+                                        <img class="logo__img" src="https://static.hltv.org/images/team/logo/{{team.id}}" />
+                                    </td>
+                                {% endif %}
                                 <td colspan="2" class="small bright">{{ team.name }}</td>
                             </tr>
                         {% endfor %}
                         <tr>
+                            {% if config.showLogos %}
+                                <td>&nbsp;</td>
+                            {% endif %}
                             <td colspan="2">{{ match.event.name }}</td>
                         </tr>
                     </table>

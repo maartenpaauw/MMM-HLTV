@@ -9,6 +9,8 @@ Module.register('MMM-HLTV', {
         'amount': 5,
         'stars': 0,
         'preferWhite': false,
+        'template': 'strafe',
+        'showLogos': true,
     },
 
     // Interval
@@ -63,7 +65,7 @@ Module.register('MMM-HLTV', {
      * Get the Nunjucks template.
      */
     getTemplate() {
-        return 'MMM-HLTV.njk';
+        return `templates/${this.config.template}.njk`;
     },
 
     /**
