@@ -1,14 +1,23 @@
-Module.register("MMM-HLTV", {
+Module.register('MMM-HLTV', {
 
     // All matches.
     matches: [],
+
+    // Scorebots
+    scorebots: {},
 
     // Module config defaults.
     defaults: {
         'updateInterval': 60 * 1000,
         'amount': 5,
         'stars': 0,
+        'preferWhite': false,
+        'template': 'strafe',
+        'showLogos': true,
     },
+
+    // Interval
+    interval: null,
 
     /**
      * Is called when the module is started.
@@ -16,8 +25,8 @@ Module.register("MMM-HLTV", {
      * @return {void}
      */
     start() {
-        this.sendSocketNotification('SET_CONFIG', this.config);
-        this.sendSocketNotification('FETCH_MATCHES');
+        this.sendSocketNotification('CONFIG_SET', this.config);
+        this.sendSocketNotification('MATCHES_FETCH');
         this.scheduleFetch();
     },
 
@@ -29,7 +38,7 @@ Module.register("MMM-HLTV", {
     getScripts() {
         return [
             'moment.js',
-        ]
+        ];
     },
 
     /**
@@ -40,7 +49,7 @@ Module.register("MMM-HLTV", {
     getStyles() {
         return [
             'MMM-HLTV.css',
-        ]
+        ];
     },
 
     /**
@@ -56,6 +65,44 @@ Module.register("MMM-HLTV", {
     },
 
     /**
+     * Get the Nunjucks template.
+     */
+    getTemplate() {
+        return `templates/${this.config.template}.njk`;
+    },
+
+    /**
+     * Get the Nunjucks template data.
+     */
+    getTemplateData() {
+        return {
+            config: this.config,
+            matches: this.matches,
+            scorebots: this.scorebots,
+            moment,
+
+            is: (side, team, scoreboard) => {
+                const key = side === 'T' ? 'tTeamId' : 'ctTeamId';
+                return typeof scoreboard !== 'undefined' && team.id === scoreboard[key];
+            }
+        };
+    },
+
+    /**
+     * This method is called when a module is hidden.
+     */
+    suspend() {
+        clearInterval(this.interval);
+    },
+
+    /**
+     * This method is called when a module is shown.
+     */
+    resume() {
+        this.scheduleFetch();
+    },
+
+    /**
      * This method is called when a socket notification arrives.
      * 
      * @param  {string} notification The identifier of the notification.
@@ -67,24 +114,13 @@ Module.register("MMM-HLTV", {
             case 'MATCHES_RECEIVED':
                 this.setMatches(payload);
                 break;
-        }
-    },
-
-    /**
-     * This method generates the dom which needs to be displayed. This method is called by the Magic Mirror core.
-     * This method can to be subclassed if the module wants to display info on the mirror.
-     * Alternatively, the getTemplete method could be subclassed.
-     * 
-     * @return {DomObject | Promise} The dom or a promise with the dom to display.
-     */
-    getDom() {
-        const table = document.createElement('table');
-
-        this.matches.forEach(match => {
-            table.append(this.getMatch(match));
-        });
-
-        return table;
+            case 'MATCH_ENDED':
+                this.removeFromScoreboards(payload);
+                break;
+            case 'MATCH_UPDATE':
+                this.updateScoreboard(payload);
+                break;
+        };
     },
 
     /**
@@ -93,7 +129,7 @@ Module.register("MMM-HLTV", {
      * @return {void}
      */
     scheduleFetch() {
-        setInterval(() => {
+        this.interval = setInterval(() => {
             this.sendSocketNotification('MATCHES_FETCH');
         }, this.config.updateInterval);
     },
@@ -106,138 +142,24 @@ Module.register("MMM-HLTV", {
      */
     setMatches(matches) {
         this.matches = matches;
-        this.updateDom();
+        this.updateDom(500);
     },
 
     /**
-     * Generate a basic info cell.
      * 
-     * @return {string} info cell
+     * @param {object} update scoreboard update.
      */
-    getInfoCell() {
-        const cell = document.createElement('td');
-
-        cell.classList.add('xsmall', 'light', 'dimmed');
-
-        return cell;
+     updateScoreboard(update) {
+        const exists = update.id in this.scorebots;
+        this.scorebots[update.id] = update.scoreboard;
+        if(! exists) this.updateDom(500);
     },
 
     /**
-     * Get the match time row.
      * 
-     * @param  {string}  time match time.
-     * @param  {boolean} live match is live.
-     * @return {string} time row
+     * @param {int} id match id to remove from object.
      */
-    getTimeCell(date, live) {
-        const cell = this.getInfoCell();
-
-        cell.append(live ? this.getLive() : moment(date).format('HH:mm'));
-
-        return cell;
+    removeFromScoreboards(id) {
+        delete this.scorebots[id];
     },
-
-    /**
-     * Get star element.
-     * 
-     * @param {int} stars amount of stars.
-     */
-    getStarCell(stars) {
-        const cell = this.getInfoCell();
-
-        cell.classList.add('stars');
-        cell.append('★'.repeat(stars));
-        
-        return cell;
-    },
-
-    /**
-     * Get live icon.
-     * 
-     * @return {string} live icon
-     */
-    getLive() {
-        const wrapper = document.createElement('span');
-        const icon = document.createElement('span');
-        const live = document.createElement('span');
-
-        icon.classList.add('live__icon')
-        icon.append('⬤');
-
-        live.classList.add('live__text');
-        live.append(this.translate('LIVE'));
-        
-        wrapper.classList.add('live', 'bold', 'bright');
-        wrapper.append(icon, live);
-
-        return wrapper;
-    },
-
-    /**
-     * Generate team row.
-     * 
-     * @param  {string}  name  team name
-     * @return {string} team row
-     */
-    getTeamRow(name) {
-        const row = document.createElement('tr');
-        const cellName = document.createElement('td');
-
-        cellName.append(name);
-        cellName.classList.add('small', 'light');
-        row.append(cellName);
-
-        return row;
-    },
-
-    /**
-     * Get event row.
-     * 
-     * @param  {string} name event name
-     * @return {string} event row
-     */
-    getEventRow(name) {
-        const row = document.createElement('tr');
-        const cell = this.getInfoCell();
-
-        cell.append(name);
-        row.append(cell);
-
-        return row;
-    },
-
-    /**
-     * Get a match.
-     * 
-     * @param  {object} match match object
-     * @return {string} match inside a table
-     */
-    getMatch(match) {
-        const table = document.createElement('table');
-        const information = document.createElement('tr');
-
-        information.append(
-            this.getTimeCell(match.date, match.live),
-            this.getStarCell(match.stars),
-        );
-
-        table.classList.add('match');
-        table.append(information);
-        table.append(this.getTeamRow(this.getValue(match.team1, 'name')));
-        table.append(this.getTeamRow(this.getValue(match.team2, 'name')));
-        table.append(this.getEventRow(this.getValue(match.event, 'name')));
-
-        return table;
-    },
-
-    /**
-     * Get value of a given key or return TBA translated.
-     * 
-     * @param  {object} data data
-     * @param  {string} name name
-     * @return {string} value
-     */
-    getValue(data, name) {
-        return data ? data[name] : this.translate('TBA');
-    }
 });

@@ -1,10 +1,12 @@
 {
   "name": "MMM-HLTV",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "MagicMirror2 module which will show CS:GO matches provided by HLTV",
+  "main": "MMM-HLTV.js",
   "author": "maartenpaauw <maartenpaauw@gmail.com>",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "dependencies": {
-    "hltv": "^2.9.0"
+    "hltv": "2.16.2",
+    "lodash": "4.17.15"
   }
 }

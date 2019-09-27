@@ -1,0 +1,62 @@
+<table class="xsmall light dimmed">
+    {% if matches.length === 0 %}
+        <tr>
+            <td>{{ 'NO_MATCHES_FOUND' | translate }}</td>
+        </tr>
+    {% else %}
+        <tr>
+            <td>
+                {% for match in matches %}
+                    {% set scoreboard = scorebots[match.id] %}
+                    <table class="match">
+                        <tr>
+                            {% if config.showLogos %}
+                                <td>&nbsp;</td>
+                            {% endif %}
+                            {% if match.live %}
+                                <td>
+                                    <div class="live bold bright">
+                                        <span class="live__icon {{ 'live__icon--colored' if not config.preferWhite }}">⬤</span>
+                                        <span>{{ 'LIVE' | translate | upper }}</span>
+                                    </div>
+                                </td>
+                            {% else %}
+                                <td class="normal">{{ moment(match.date).format('HH:mm') }}</td>
+                            {% endif %}
+                            {% if match.stars > 0 %}
+                                <td class="stars">{{ '★'.repeat(match.stars) }}</td>
+                            {% endif %}
+                        </tr>
+                        {% for team in [match.team1, match.team2] %}
+                            <tr>
+                                {% if config.showLogos %}
+                                    <td class="logo">
+                                        <img class="logo__img" src="https://static.hltv.org/images/team/logo/{{team.id}}" />
+                                    </td>
+                                {% endif %}
+                                <td class="small bold bright">{{ team.name }}</td>
+                                {% if match.live %}
+                                    <td class="score small bold bright">
+                                        {% if is('T', team, scoreboard) %}
+                                            {{ scoreboard.tTeamScore }}
+                                        {% elif is('CT', team, scoreboard) %}
+                                            {{ scoreboard.ctTeamScore }}
+                                        {% else %}
+                                            &ndash;
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            {% if config.showLogos %}
+                                <td>&nbsp;</td>
+                            {% endif %}
+                            <td>{{ match.event.name }}</td>
+                        </tr>
+                    </table>
+                {% endfor %}
+            </td>
+        </tr>
+    {% endif %}
+</table>
