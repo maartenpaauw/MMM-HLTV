@@ -84,6 +84,7 @@ module.exports = NodeHelper.create({
      */
     applyfilters () {
         this.filterStars();
+        this.filterTeams();
         this.filterAmount();
     },
 
@@ -104,6 +105,22 @@ module.exports = NodeHelper.create({
     filterStars () {
         this.matches = this.matches.filter(match => {
             return match.stars >= this.config.stars;
+        });
+    },
+
+    /**
+     * Only allow matches where a specific team is playing.
+     *
+     * @return {void}
+     */
+    filterTeams () {
+        if (this.config.teams.length === 0) return;
+
+        this.matches = this.matches.filter(match => {
+            const isTeam1 = this.config.teams.includes(match.team1.id);
+            const isTeam2 = this.config.teams.includes(match.team2.id);
+
+            return isTeam1 || isTeam2;
         });
     }
 });

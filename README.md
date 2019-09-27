@@ -36,14 +36,15 @@ var config = {
 
 ## Configuration options
 
-| Option           | Description                                                                                                      |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `updateInterval` | *Optional* The update interval in milliseconds <br><br>**Type:** `int` <br>**Default:** 60000 (1 minute)         |
-| `amount`         | *Optional* The amount of matches to show <br><br>**Type:** `int` <br>**Default:** 5                              |
-| `stars`          | *Optional* The minimum number of stars a match must have <br><br>**Type:** `int` <br>**Default:** 0              |
-| `preferWhite`    | *Optional* Whether the module may use colors <br><br>**Type:** `bool` <br>**Default:** false                     |
-| `template`       | *Optional* Which template to use (only `strafe` is available) <br><br>**Type:** `string` <br>**Default:** strafe |
-| `showLogos`      | *Optional* whether the logos of the teams may be displayed <br><br>**Type:** `bool` <br>**Default:** true        |
+| Option           | Description                                                                                                               |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `updateInterval` | *Optional* The update interval in milliseconds <br><br>**Type:** `int` <br>**Default:** 60000 (1 minute)                  |
+| `amount`         | *Optional* The amount of matches to show <br><br>**Type:** `int` <br>**Default:** 5                                       |
+| `stars`          | *Optional* The minimum number of stars a match must have <br><br>**Type:** `int` <br>**Default:** 0                       |
+| `teams`          | *Optional* Only teams (IDs) that are included in this list may be displayed <br><br>**Type:** `int[]` <br>**Default:** [] |
+| `preferWhite`    | *Optional* Whether the module may use colors <br><br>**Type:** `bool` <br>**Default:** false                              |
+| `template`       | *Optional* Which template to use (only `strafe` is available) <br><br>**Type:** `string` <br>**Default:** strafe          |
+| `showLogos`      | *Optional* whether the logos of the teams may be displayed <br><br>**Type:** `bool` <br>**Default:** true                 |
 
 ## Built With
 
