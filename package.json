@@ -5,8 +5,13 @@
   "main": "MMM-HLTV.js",
   "author": "maartenpaauw <maartenpaauw@gmail.com>",
   "license": "GPL-3.0",
+  "scripts": {
+    "dev": "yarn run scss --watch",
+    "scss": "node-sass src/styles/MMM-HLTV.scss --output . --output-style compressed"
+  },
   "dependencies": {
     "hltv": "2.16.2",
-    "lodash": "4.17.15"
+    "lodash": "4.17.15",
+    "node-sass": "4.12.0"
   }
 }

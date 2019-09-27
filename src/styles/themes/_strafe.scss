@@ -1,0 +1,33 @@
+.strafe {
+
+    .match {
+        margin-bottom: 20px;
+    }
+
+    .live__icon {
+        font-size: 50%;
+        vertical-align: text-top;
+
+        &--colored {
+            color: red;
+        }
+    }
+    
+    .stars {
+        text-align: right;
+    }
+    
+    .logo {
+        width: 40px;
+        height: 40px;
+
+        &__img {
+            width: 30px;
+            margin-top: 5px;
+        }
+    }
+    
+    .score {
+        text-align: right;
+    }
+}
