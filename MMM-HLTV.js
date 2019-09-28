@@ -11,6 +11,7 @@ Module.register('MMM-HLTV', {
         'updateInterval': 60 * 1000,
         'amount': 5,
         'stars': 0,
+        'teams': [],
         'preferWhite': false,
         'template': 'strafe',
         'showLogos': true,
