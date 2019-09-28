@@ -15,7 +15,8 @@ To install the module, use your terminal to:
 1. Navigate to your MagicMirror's modules folder. If you are using the default installation directory, use the command: `cd ~/MagicMirror/modules`.
 2. Copy the module to your computer by executing the following command: `git clone https://github.com/maartenpaauw/MMM-HLTV.git`.
 3. Navigate to the MMM-HLTV module directory with `cd MMM-HLTV`.
-4. Execute `yarn install` to install the node dependencies.
+4. *Optional:* stay up to date with development with `git checkout develop`.
+5. Execute `yarn install` to install the node dependencies.
 
 ## Using the module
 
